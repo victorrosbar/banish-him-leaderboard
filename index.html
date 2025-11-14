@@ -1,5 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Banish Him - Leaderboard</title>
+<style>
+  body {
+    background-color: #150313;
+    color: #fff;
+    font-family: "Courier New", Courier, monospace;
+    text-align: center;
+    padding: 20px;
+  }
+
+  h1 {
+    color: #ff4444;
+    text-shadow: 0 0 10px #ff0000;
+    margin-bottom: 10px;
+  }
+
+  h2 {
+    color: #ff8888;
+    margin-bottom: 20px;
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    font-size: 1rem;
+  }
+
+  th, td {
+    padding: 10px 15px;
+    border: 1px solid #501449;
+    text-align: center;
+  }
+
+  th {
+    background-color: #501449;
+    text-transform: uppercase;
+  }
+
+  tbody tr:nth-child(1) td {
+    background-color: #ff4444;
+    text-shadow: 0 0 5px #ff0000;
+    font-weight: bold;
+  }
+
+  tbody tr:nth-child(2) td {
+    background-color: #ff8855;
+    text-shadow: 0 0 5px #ff5500;
+  }
+
+  tbody tr:nth-child(3) td {
+    background-color: #ffaa77;
+    text-shadow: 0 0 5px #ff7700;
+  }
+
+  tbody tr:hover td {
+    background-color: #8d0000;
+    text-shadow: 0 0 10px #ff0000;
+    cursor: default;
+  }
+
+  .loading {
+    color: #ff5555;
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+<table id="leaderboard">
+  <thead>
+    <tr>
+      <th>Place</th>
+      <th>Username</th>
+      <th>Time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td colspan="3" class="loading">Loading...</td></tr>
+  </tbody>
+</table>
 <script>
   const LEADERBOARD_URL = "https://lfxlakrgxgxtadogmrpn.supabase.co/functions/v1/banish-him-get";
+
+  function formatTime(secondsFloat) {
+    const totalMs = Math.floor(secondsFloat * 1000);
+
+    const minutes = Math.floor(totalMs / 60000);
+    const seconds = Math.floor((totalMs % 60000) / 1000);
+    const milliseconds = totalMs % 1000;
+
+    // Ensure formatting with padding
+    const m = String(minutes).padStart(2, "0");
+    const s = String(seconds).padStart(2, "0");
+    const ms = String(milliseconds).padStart(3, "0"); // 3 digits (000–999)
+
+    return `${m}:${s}:${ms}`;
+  }
 
   async function fetchLeaderboard() {
     const tbody = document.querySelector("#leaderboard tbody");
@@ -22,7 +123,7 @@
         tr.innerHTML = `
           <td>${index + 1}</td>
           <td>${entry.username}</td>
-          <td>${entry.time_seconds}</td>
+          <td>${formatTime(entry.time_seconds)}</td>
         `;
         tbody.appendChild(tr);
       });
@@ -34,3 +135,5 @@
 
   fetchLeaderboard();
 </script>
+</body>
+</html>
